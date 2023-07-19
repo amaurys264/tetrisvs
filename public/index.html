@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Tetris.vs</title>
+</head>
+<body id="tetris">
+    <div id="segundo_plano">
+        <header>
+            <a href="index.html" style="text-decoration: none;">
+                <h1>TETRIS.vs</h1>
+            </a>
+        </header>
+        <div id="div1">  
+            <img src="img/copa.png" id="img_copa" alt="copa.png">
+            <span class="score"><i>Mejor puntuación:</i></span >
+            <span id="score_data" class="score_d" ></span>
+            <span class="score"><i>registrada por:</i></span>
+            <span id="score_user" class="score_d">Alguien</span>                        
+        </div>   
+      <section>
+       
+            <canvas id="caja" width="200" height="400">
+               No hay compativilidad con API Canvas.
+           </canvas>
+       
+             <div id="pizarra">
+                  <h4>Próximo:</h4>  
+                  <canvas id="canvitas" width="40" height="40"></canvas>  
+                  <h4>Velocidad:</h4>
+                  <p id="speed">1</p>   
+                  <h4>No. de Piezas:</h4>
+                  <p id="n_piezas">0</p>   
+                  <h4>Puntuación</h4>
+                  <p id="puntos">0</p> 
+                  <h4>Actividad TETRIS.vs</h4>
+                  <span>Usuarios activos:</span><span id=usuarios_activos>0</span>            
+             </div>  
+      </section>  
+      <div id="movil_panel">
+        <div id="level1">
+            <button type="button" id=b_arriba >arriba</button>        
+        </div>  
+        <div id="level2">
+            <button type="button" id="b_derecha">izquierda</button>
+            <button type="button" id="b_izquierda">derecha</button>
+        </div>                      
+        <div id="level3">
+            <button type="button" id="b_abajo">abajo</button>
+        </div>    
+      </div>      
+      <footer>
+        <div>            
+            <span class="elementos"><i>teléfono de usuario</i></span>
+            <span class="elementos" id="t_user">56827002</span>
+        </div>
+      </footer>
+    </div>
+    </div id="hidden">             
+         <div id="over" class="popup">
+            <div id="contenedor">
+                 <h2>Game over!</h2>
+                    <span>Puntuación: </span><span id="puntuacion_resumen"></span>
+                    <div>
+                        <p style="font-size: 12px;">Pulse el Boton Empezar para un nuevo desafío</p>
+                    </div>
+                <button type="button" id="boton_over" class="boton_popup">Empezar</button>
+            </div>
+
+        </div>
+        <div id="start" class="popup" >            
+            <div id="contenedor">
+                <div>
+                    <h1>TETRIS.vs</h1>
+                </div>
+                <div>
+                    <img src="img/FLAYER.jpg" id="flayer" alt="Flayer promocional">
+                </div>                
+                <span id="concurso_fecha">válido desde el 16 al 23 de julio </span>
+                <hr/>
+                <h2>Tu información</h2>
+                <p>Estos datos permiten identificarte en cada una de tus puntuaciones.</p>
+                <br/>
+                <input type="text" placeholder="Nombre o Avatar" id="input_name" maxlength="10" title="TETRIS.VS no se hace responsable de un error de pago provocado por información errónea insertada en el presente formulario.">
+                <br/><br/>
+                <input type="number" placeholder="No. de teléfono cell" id="input_number" min="50000000" max="59999999" title="TETRIS.VS no se hace responsable de un error de pago provocado por información errónea insertada en el presente formulario.">
+                <br><br>
+                <button type="button_start" id="boton_start" class="boton_popup">Comenzar</button>
+            </div>
+            <br/>
+                <a href="pautas.html">Reglamento</a><br/><br/>
+                <a href="comentario.html">Quiero hacer un comentario....</a>
+            <br/>
+        </div>
+        <div>
+            <audio id="efecto1" class="audio">
+            
+                <source src="sound/s6-1.WAV">           
+            </audio>
+            <audio id="efecto2" class="audio">
+                <source src="sound/s3.wav">           
+            </audio>
+            <audio id="efecto4" class="audio">
+                <source src="sound/s4.wav">           
+            </audio>
+            <audio id="efecto3" class="audio">            
+                <source src="sound/s5.wav">            
+            </audio>
+        </div>  
+        <script src="codigo.js"></script>
+        <script src="funciones.js"></script>
+        <noscript>Active el script del navegador</noscript>
+    </div>
+</body>
+</html>         
