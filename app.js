@@ -83,16 +83,14 @@ async (solicitud,respuesta)=>
         
     switch (solicitud.body.orden)
     {
-      case 1: 
-         comentar(solicitud.body.texto,solicitud.body.es_public,solicitud.body.sitio);       
-         const mis_com1=await sacar_comentarios(solicitud.body.sitio); 
-         console.log(mis_com1.rows);
+      case 1:
+         console.log(solicitud.body); 
+         comentar(solicitud.body.texto,solicitud.body.es_publico,solicitud.body.sitio);       
+         const mis_com1=await sacar_comentarios(solicitud.body.sitio);          
          respuesta.send(mis_com1.rows);
         break;
-      case 2:
-        console.log("sacar 2");
-         const mis_com2=await sacar_comentarios(solicitud.body.sitio); 
-         console.log(mis_com2.rows);
+      case 2:                
+         const mis_com2=await sacar_comentarios(solicitud.body.sitio);         
          respuesta.send(mis_com2.rows);
         break;  
     }   
@@ -118,11 +116,11 @@ async function consultar(orden)
         return datos.rows;
         break;
     case 3:
-        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='2023-07-16 00:00:01' and date_time<='2023-07-24 00:00:01')`);        
+        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='2023-07-23 00:00:01' and date_time<='2023-08-24 00:00:01')`);        
         if (datos.rows.length==0)
         {
             console.log("array vacio");
-            datos.rows.push({stio:"tetris",pun_max:0,usuario:"alguien",telefono:50000000,timezone:"2023-07-17T00:00"})
+            datos.rows.push({stio:"tetris",pun_max:0,usuario:"Alguien",telefono:50000000,timezone:"2023-07-17T00:00"})
         }
         return datos.rows[0];
         break;
@@ -141,11 +139,13 @@ async function ins_score(isdato1 ,isdato2,isdato3,isdato4,isdato5)
 async function comentar(texto,public,sitio)
 {
     const date_op=giveTime();  
-   await cliente.query(`insert into comentarios (texto,publico,fecha,sitio) values ('${texto}','true','${date_op}','${sitio}')`);        
+    console.log(public);
+   await cliente.query(`insert into comentarios (texto,publico,fecha,sitio) values ('${texto}','${public}','${date_op}','${sitio}')`);        
 }
 async function sacar_comentarios(sitio)
 {
-    const db_comentarios= await cliente.query(`select texto, publico, fecha AT TIME ZONE '+0', sitio from comentarios WHERE sitio='${sitio}'`)
+    
+    const db_comentarios= await cliente.query(`select texto, publico, fecha AT TIME ZONE '+0', sitio from comentarios WHERE sitio='${sitio}'and publico=true`)
     return db_comentarios;
 }
 server.get

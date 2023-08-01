@@ -2,10 +2,12 @@ var section_js=document.getElementById("seccion");
 var enviar_js=document.getElementById("enviar");    
 var texto_js=document.getElementById("texto_comentario");
 var publico_js=document.getElementById("check1");
+var refrescando=setInterval(refrescar,5000);
 
 enviar_js.onclick=function()
 {
-   const cuerpo=
+    
+    const cuerpo=
    {
       texto:texto_js.value,
       es_publico:publico_js.checked,
@@ -13,7 +15,7 @@ enviar_js.onclick=function()
       sitio:"tetris"
    } 
 
-   fetch('http://10.40.18.23:80/com',
+   fetch(document.location.origin+'/com',
    {
     method:'POST',
     headers:{
@@ -26,20 +28,20 @@ enviar_js.onclick=function()
    .then(datos=>
       {
          console.log(datos);
-         section_js.innerHTML=null; 
+         section_js.innerHTML=value; 
          datos.forEach(element =>{
 
-         section_js.innerHTML+=`<div class="capsula">                
+         section_js.value+=`<div class="capsula">                
             <p class="s-fecha">${realtime(new Date(element.timezone))}</p> <br/>                 
             <p class="registro" >
                 ${element.texto}
-            </p>                
-            <hr/>
+            </p>                           
         </div>`
             
          });
+         texto_js.value=null;
       })
-   .catch(error=>{console.log(error)});
+   .catch(error=>{console.log(error);texto_js.value=null;});
 }
 
 
@@ -47,42 +49,48 @@ window.onload=function()
 {
    console.log("load");
    //enviar_js.disabled=true;
-   const cuerpo=
-   {
-      orden:2,
-      sitio:"tetris"
-   } 
+   refrescar();
+  
+}
+function refrescar()
+{
+    const cuerpo=
+    {
+       orden:2,
+       sitio:"tetris"
+    } 
+ 
+    fetch(document.location.origin+'/com',
+    {
+     method:'POST',
+     headers:{
+         'Content-Type':'application/json'
+     },
+     
+     body: JSON.stringify(cuerpo)
+    }) 
+    .then(response=>response.json())
+    .then(datos=>
+       {
+          console.log(datos);
+          let c=0   
+          section_js.innerHTML=null; 
+          datos.forEach(element =>{         
+          console.log(c);++c;
+          section_js.innerHTML+=`
+          <div class="capsula">  
+          <p class="s-fecha">${realtime(new Date(element.timezone))}</p> <br/>
+                                                        
+             <p class="registro" >
+                 ${element.texto}
+             </p>           
+         </div>`
+             
+          });
+       })
+    .catch(error=>{console.log(error)});
+    section_js.scrollTop
 
-   fetch('http://10.40.18.23:80/com',
-   {
-    method:'POST',
-    headers:{
-        'Content-Type':'application/json'
-    },
-    
-    body: JSON.stringify(cuerpo)
-   }) 
-   .then(response=>response.json())
-   .then(datos=>
-      {
-         console.log(datos);
-         let c=0   
-         section_js.innerHTML=null; 
-         datos.forEach(element =>{         
-         console.log(c);++c;
-         section_js.innerHTML+=`
-         <div class="capsula">  
-         <p class="s-fecha">${realtime(new Date(element.timezone))}</p> <br/>
-                                                       
-            <p class="registro" >
-                ${element.texto}
-            </p>           
-        </div>`
-            
-         });
-      })
-   .catch(error=>{console.log(error)});
-   section_js.scrollTop
 }
 enviar_js.oninput=function()
 {

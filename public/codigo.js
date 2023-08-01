@@ -13,6 +13,8 @@ var sonido1=document.getElementById("efecto1");
 var sonido2=document.getElementById("efecto2");
 var sonido3=document.getElementById("efecto3");
 var sonido4=document.getElementById("efecto4");
+var musica=document.getElementById("musica");
+
 var plano2=document.getElementById("segundo_plano");
 var boton_over=document.getElementById("boton_over");
 var boton_start=document.getElementById("boton_start");
@@ -122,6 +124,9 @@ window.addEventListener("keydown", (evento) => {
       actualizar_pizarra();      
       frame=setInterval(mostrar,16);
       ajax_time=setInterval(conneccion_2,1000);
+      musica.load()
+      musica.volume=0.2;
+      musica.play();
  }
  boton_start.onclick=function()
  {
@@ -141,6 +146,9 @@ window.addEventListener("keydown", (evento) => {
       sonido3.pause();
       sonido4.play();
       sonido4.pause();
+      musica.load();
+      musica.volume=0.2;
+      musica.play();
       start.style.display="none";
       plano2.style.display="block";
       mapa=[{x:1,y:50}];
@@ -156,8 +164,7 @@ window.addEventListener("keydown", (evento) => {
       actualizar_pizarra();      
       frame=setInterval(mostrar,16);
       ajax_time=setInterval(conneccion_2,1000);
- }
-
+}
 b_abajo.ontouchstart=function()
 {
    speed=30;           
@@ -192,16 +199,20 @@ b_arriba.onclick=function()
 }
 b_izquierda.onclick=function()
 {
-   if (!iscoll(figura,mapa,"derecha"))
+   if (!iscoll(figura,mapa,"izquierda"))
            {
-             ++desplazamiento;             
+             --desplazamiento;
+             sonido4.pause();
+             sonido4.play();             
            }  
 }
 b_derecha.onclick=function()
 {
-   if (!iscoll(figura,mapa,"izquierda"))
+   if (!iscoll(figura,mapa,"derecha"))
          {
-             --desplazamiento;             
+             ++desplazamiento;             
+             sonido4.pause();
+             sonido4.play();
          }     
 }
 
@@ -272,7 +283,8 @@ function mover()
          {
       
             puntuacion_resumen.innerHTML=puntuación;
-            conneccion_1()      
+            conneccion_1();      
+            musica.pause();
             clearInterval(frame);
             clearInterval(ajax_time);
             over.style.display="block";
@@ -294,7 +306,7 @@ function mover()
          
             transferir();            
             sonido2.load();
-            sonido2.play();
+            sonido2.play();            
             chequear();
             nueva_pieza();                        
        }

@@ -9,48 +9,53 @@
 </head>
 <body id="tetris">
     <div id="segundo_plano">
-        <header>
+        <header id="tetris_header">
             <a href="index.html" style="text-decoration: none;">
                 <h1>TETRIS.vs</h1>
             </a>
         </header>
-        <div id="div1">  
-            <img src="img/copa.png" id="img_copa" alt="copa.png">
-            <span class="score"><i>Mejor puntuación:</i></span >
-            <span id="score_data" class="score_d" ></span>
-            <span class="score"><i>registrada por:</i></span>
-            <span id="score_user" class="score_d">Alguien</span>                        
+        <div id="div1"> 
+            <a href="index.html">
+                <img src="img/home.png" id="home_image"> 
+            </a>    
+            <div>
+                <img src="img/copa.png" id="img_copa" alt="copa.png">
+                <span class="score"><i>Mejor puntuación:</i></span >
+                    <span id="score_data" class="score_d" ><i>0</i></span>    
+            </div>        
+            <div>                
+                <span class="score"><i>registrada por:</i></span>
+                <span id="score_user" class="score_d"><i>Alguien</i></span>                        
+            </div>    
         </div>   
-      <section>
-       
+      <section>       
             <canvas id="caja" width="200" height="400">
                No hay compativilidad con API Canvas.
-           </canvas>
+            </canvas>
        
              <div id="pizarra">
-                  <h4>Próximo:</h4>  
+                  <h4>Próximo</h4>  
                   <canvas id="canvitas" width="40" height="40"></canvas>  
-                  <h4>Velocidad:</h4>
+                  <h4>Velocidad</h4>
                   <p id="speed">1</p>   
-                  <h4>No. de Piezas:</h4>
+                  <h4>No. de Piezas</h4>
                   <p id="n_piezas">0</p>   
                   <h4>Puntuación</h4>
                   <p id="puntos">0</p> 
                   <h4>Actividad TETRIS.vs</h4>
-                  <span>Usuarios activos:</span><span id=usuarios_activos>0</span>            
+                  <span>Usuarios activos:</span>
+                  <span id=usuarios_activos>0</span>                                           
              </div>  
       </section>  
       <div id="movil_panel">
         <div id="level1">
-            <button type="button" id=b_arriba >arriba</button>        
+            <button type="button" id=b_arriba  ><img src="img/flecha-4.png"></button>        
         </div>  
         <div id="level2">
-            <button type="button" id="b_derecha">izquierda</button>
-            <button type="button" id="b_izquierda">derecha</button>
-        </div>                      
-        <div id="level3">
-            <button type="button" id="b_abajo">abajo</button>
-        </div>    
+            <button type="button" id="b_derecha"><img src="img/flecha-3.png" ></button>
+            <button type="button" id="b_abajo"><img src="img/flecha-2.png"></button>
+            <button type="button" id="b_izquierda" ><img src="img/flecha-1.png"></button>
+        </div>                           
       </div>      
       <footer>
         <div>            
@@ -59,9 +64,9 @@
         </div>
       </footer>
     </div>
-    </div id="hidden">             
+    <div id="hidden">                     
          <div id="over" class="popup">
-            <div id="contenedor">
+            <div id="o_contenedor">
                  <h2>Game over!</h2>
                     <span>Puntuación: </span><span id="puntuacion_resumen"></span>
                     <div>
@@ -69,10 +74,10 @@
                     </div>
                 <button type="button" id="boton_over" class="boton_popup">Empezar</button>
             </div>
-
         </div>
+
         <div id="start" class="popup" >            
-            <div id="contenedor">
+            <div id="s_contenedor">
                 <div>
                     <h1>TETRIS.vs</h1>
                 </div>
@@ -95,7 +100,7 @@
                 <a href="comentario.html">Quiero hacer un comentario....</a>
             <br/>
         </div>
-        <div>
+        <div id="fx">
             <audio id="efecto1" class="audio">
             
                 <source src="sound/s6-1.WAV">           
@@ -108,6 +113,9 @@
             </audio>
             <audio id="efecto3" class="audio">            
                 <source src="sound/s5.wav">            
+            </audio>
+            <audio id="musica" class="audio" loop>                
+                <source src="sound/musica1.ogg" type="audio/ogg">
             </audio>
         </div>  
         <script src="codigo.js"></script>

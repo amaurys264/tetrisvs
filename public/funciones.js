@@ -13,7 +13,7 @@ function conneccion_1()
          console.log("AJAX "+this.response+"/state:"+this.readyState+" /status:"+this.status);
       }
    }  
-   solicitud1.open("POST","http://10.40.18.23:80/registrar",true)
+   solicitud1.open("POST",document.location.origin+"/registrar",true)
    solicitud1.setRequestHeader("Content-Type", "application/json");
    solicitud1.send(JSON.stringify({op:1,site:"tetris",record:puntuación,usuario:usuario_nombre,telefono:usuario_telef}));   
    // En los datos enviados op significa la "operacion" a realizar en el servidor.En este caso 1 = registrar en base de datos
@@ -54,13 +54,13 @@ function conneccion_2()
       }
       
    }  
-   solicitud2.open("POST","http://10.40.18.23:80/data",true)
+   solicitud2.open("POST",document.location.origin+"/data",true)
    solicitud2.setRequestHeader("Content-Type", "application/json");   
    solicitud2.send(JSON.stringify({id_user:id_user}));      
 }
 function coneccion3()
 {
-    fetch("http://localhost:80/cookie",{method:"POST"})
+    fetch(document.location.origin+"/cookie",{method:"POST"})
     .then(response => 
         {   
             return response.json();
