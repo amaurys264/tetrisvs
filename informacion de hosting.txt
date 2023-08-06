@@ -1,2 +1,0 @@
-dominio solicitado:tetrisvs.nat.cu
-tetrisvs.nat.cu
