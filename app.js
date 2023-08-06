@@ -1,6 +1,6 @@
 const express=require("express");
 const server=express();
-const puerto=process.env.port||3005;
+const puerto=process.env.port||3000;
 const postgres=require('pg');
 const url_data=require('node:url');
 const body_parser=require("body-parser");
@@ -193,7 +193,7 @@ server.post
 
 server.listen
 (
-    80,
+    puerto,
     ()=>
     {
         console.log("server a la escucha en el puerto 80");
