@@ -2,7 +2,6 @@ const express=require("express");
 const server=express();
 const puerto=process.env.port||3000;
 const postgres=require('pg');
-const url_data=require('node:url');
 const body_parser=require("body-parser");
 var registro_usuario=[];
     module.export=registro_usuario;
@@ -196,7 +195,7 @@ server.listen
     puerto,
     ()=>
     {
-        console.log("server a la escucha en el puerto 80");
+        console.log("server a la escucha en el puerto "+puerto);
         realtime(new Date());
     }   
 )
