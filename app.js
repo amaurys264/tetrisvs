@@ -22,8 +22,23 @@ server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
 const cliente = new postgres.Pool({
     connectionString:'postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv',
   })*/
-const cliente=new postgres.Pool
-(
+const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
+const cliente=new postgres.Client(conString);
+cliente.connect(function(err)
+  {
+        if(err){return console.log("No se puede conectar a postgres")}
+        cliente.query('SELECT NOW() AS "theTime"',function(err,result)
+        {
+            if(err){return console.log('error corriendo solicitud',err)}
+            console.log(result.rows[0].theTime);
+            cliente.end();
+        }
+       
+        )
+
+  }
+)
+/*(
     {
         host:'localhost',
         port:5432,
@@ -31,7 +46,7 @@ const cliente=new postgres.Pool
         user:'postgres',
         password:'Admin'                       
     }  
-)
+)*/
 server.use(express.static(__dirname+"/public"));
 server.use((req,resul, next)=>
 {
