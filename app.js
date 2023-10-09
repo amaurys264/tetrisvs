@@ -31,7 +31,7 @@ cliente.connect(function(err)
         {
             if(err){return console.log('error corriendo solicitud',err)}
             console.log(result.rows[0].theTime);
-            cliente.end();
+            
         }
        
         )
