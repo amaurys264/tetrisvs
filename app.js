@@ -134,7 +134,7 @@ async function consultar(orden)
         return datos.rows;
         break;
     case 3:
-        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='2023-07-23 00:00:01' and date_time<='2023-08-24 00:00:01')`);        
+        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='2023-07-23 00:00:01' and date_time<='2023-10-24 00:00:01')`);        
         if (datos.rows.length==0)
         {
             console.log("array vacio");
