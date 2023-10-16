@@ -187,11 +187,19 @@ async function configurar()
  async function reestablecer()
  {
     const resultado = await cliente.query(`select * from setup`);
+    if (resultado.rowCount>0)
+    {
     console.log(resultado.rows);
     site_control.date_start=new Date(resultado.rows[0].date_start);
     site_control.date_end= new Date(resultado.rows[0].date_end);
     site_control.concurso_on=resultado.rows[0].concurso_on;
     site_control.pro_flayer=resultado.rows[0].flayer_dir;
+    }
+    else
+    {
+        console.log("No hay datos de configuración en base de datos!")
+        console.log("Haga una configuracion inicial antes de poner en produccion el sitio.")
+    }
  }   
 
 server.post
