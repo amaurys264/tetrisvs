@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetrisvs login</title>
+    <style>
+        *{            
+            padding: 5px;
+            margin: 5px auto;  
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;          
+         }
+         header{background-color: rgb(0, 72, 139);color: aliceblue;}
+         h1{text-align: center;}
+
+        img{
+            display:block;
+            width: 300px;
+            min-height: 300px;
+            border: solid black 1px; 
+        }
+        label{display:block;text-align: center;font-size: 18px;color: rgb(0, 72, 139);font-weight: 600;}
+        input{display:block;font-size: 14px;color: rgb(66, 66, 66);cursor: pointer;}
+        button{display: block;margin:auto;padding:5px 10px;font-size: 14px;}
+        section div{width: 340px;border-radius: 10px;transition: 0.5s;background-color:  rgb(245, 245, 245)}
+        form > div:hover
+        {background-color:  rgb(201, 226, 250);transition: 0.5s}
+        .modo{display: inline-block;}
+        div div{display: block;width: fit-content;background-color: inherit;transition: 0s;}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Panel de control</h1>
+    </header>
+    <section>
+        <form action="/set" method="POST" enctype="multipart/form-data">
+            <div>
+                <label>Fecha de inicio de concurso</label>
+                <input id="date_start" name="date_start" type="date" ><br/><br/>
+            </div>
+            <div>    
+                <label>Fecha tope del concurso</label>
+                <input id="date_end" name="date_end" type="date"><br/><br/> 
+            </div>    
+            <div>
+                <label>Imagen promocional</label>
+                <input id="image_inp" name='image' type="file">
+                <img id="pro_image" alt="imagen promocional" src="/public/img/FLAYER.jpg"><br/>
+            </div>
+            <div>   
+                <label>Base de datos</label>
+                <button type="button" id="button_clear" >Limpiar</button><br/>
+            </div>              
+            <div>
+                <label>Modo concurso</label>
+                <div>
+                    <label class="modo" for="concurso_on" style="left:50px">Si</label>
+                    <input class="modo" id="concurso_on" name="concurso_on" type="radio" value="Si">
+                </div>
+                <div>
+                    <label class="modo" for="concurso_off">No</label>
+                    <input class="modo" id="concurso_off" name="concurso_on" type="radio" value="No" checked><br/>
+                </div>
+            </div>    
+                <button id="B_salvar" type="submit">Salvar</button>
+        </form>      
+    </section>
+    <script>    
+        var date_start=document.getElementById("date_start");
+        var date_end=document.getElementById("date_end");
+        var image_inp=document.getElementById("image_inp");
+        var pro_image=document.getElementById("pro_image");
+        var button_clear=document.getElementById("button_clear");
+
+
+        function modificar()
+        {
+           const opciones={
+            method: "POST"
+           } 
+           fetch(document.location.origin+"/set",opciones)
+           .then(response => 
+                {   
+                    return response.json();
+                }        
+            ).then
+            (
+               data=>
+               { 
+                    
+                    alert("Cambios realizados exitosamente! ");                
+               }
+            )    
+            .catch 
+            (
+                (error)=>
+                {
+                    console.log('Error:',error)
+                }
+            );           
+
+        }
+        window.onload=function()
+{
+     fetch('/get',{method:"GET"})
+     .then((resp)=>
+     {      
+         return resp.json();
+     })
+     .then(data=>
+     {
+        console.log(data);
+        pro_image.src=document.location.origin+data.setup.pro_flayer;
+        
+     }) 
+     .catch((error)=>
+         {
+            console.error('Error:',error)
+         }
+      )
+}
+    </script>
+</body>
+</html>

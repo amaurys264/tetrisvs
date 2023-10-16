@@ -27,7 +27,7 @@ enviar_js.onclick=function()
    .then(response=>response.json())
    .then(datos=>
       {
-         console.log(datos);
+         
          section_js.innerHTML=value; 
          datos.forEach(element =>{
 
@@ -72,11 +72,9 @@ function refrescar()
     .then(response=>response.json())
     .then(datos=>
        {
-          console.log(datos);
           let c=0   
           section_js.innerHTML=null; 
-          datos.forEach(element =>{         
-          console.log(c);++c;
+          datos.forEach(element =>{                   
           section_js.innerHTML+=`
           <div class="capsula">  
           <p class="s-fecha">${realtime(new Date(element.timezone))}</p> <br/>
@@ -105,11 +103,9 @@ enviar_js.oninput=function()
 }
 function giveTime()
 {
-    const date_input=Date();
-    console.log(date_input);
+    const date_input=Date();    
     const clock=date_input.split(" ");
-    const temptime=clock[0]+" "+clock[1]+" "+clock[2]+" "+clock[3]+" "+clock[4]+"-0";
-    console.log(temptime);
+    const temptime=clock[0]+" "+clock[1]+" "+clock[2]+" "+clock[3]+" "+clock[4]+"-0";    
     return temptime;
 }
 function realtime(mitiempo)

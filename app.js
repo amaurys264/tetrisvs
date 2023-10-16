@@ -1,20 +1,30 @@
 const express=require("express");
 const server=express();
-const puerto=process.env.port||3000;
+const puerto=process.env.port||80;
 const postgres=require('pg');
 const body_parser=require("body-parser");
 var registro_usuario=[];
-    module.export=registro_usuario;
-const table_user=require('./extra-code');
-
+var site_control=
+    {
+        concurso_on:"",
+        pro_flayer:"/img/flayer.jpg",
+        date_start:new Date(),
+        date_end:new Date()
+    }
+const multer  = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null,__dirname+ '/public/img/flayers/')
+    },
+    filename: function (req, file, cb) {      
+      cb(null, file.originalname)
+    }
+  })
+const newupload = multer({ storage: storage })
 
 
 var cors = require('cors');
-const { name } = require("ejs");
-//const { Console } = require("node:console");
-//const { parse } = require("node:path");
-//const { isNull } = require("node:util");
-server.use(body_parser.urlencoded({extended:false}))
+server.use(body_parser.urlencoded({extended:true}))
 server.use(body_parser.json())
 
 server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
@@ -38,7 +48,7 @@ cliente.connect(function(err)
 
   }
 )
-/*(
+/*const cliente = new postgres.Pool(
     {
         host:'localhost',
         port:5432,
@@ -47,23 +57,28 @@ cliente.connect(function(err)
         password:'Admin'                       
     }  
 )*/
+
+
 server.use(express.static(__dirname+"/public"));
-server.use((req,resul, next)=>
-{
-  next();
-}
-)
-server.post
-(
-    "/cookie",
-    (solicitud,respuesta)=>
+server.post('/set', newupload.single("image"), (solicitud, respuesta, next)=>
+  {
+    console.log(solicitud.body); 
+    if(solicitud.file!=undefined)
     {
-        console.log(solicitud.cookies);        
+        
+        site_control.pro_flayer="/img/flayers/"+solicitud.file.originalname
     }
-)
-server.post
-(
-    "/data",
+    const d1=new Date(solicitud.body.date_start);
+    const d2=new Date(solicitud.body.date_end);    
+    if(solicitud.body.date_start!==""){site_control.date_start=d1}
+    if(solicitud.body.date_end){site_control.date_end=d2}
+    if(solicitud.body.concurso_on){site_control.concurso_on=solicitud.body.concurso_on;}
+    configurar()
+    
+    respuesta.sendFile(__dirname+"/private/panel.html");    
+  }
+  )
+server.post("/data",
     async(solicitud,respuesta)=>
     {
         
@@ -88,7 +103,7 @@ server.post
             add(usuario_id);
         }      
         
-        console.log(registro_usuario);
+        console.log(site_control.date_start.toISOString());
         const rem_ip=solicitud.ip;
         const datos=consultar(3);   
         resultado=await datos;        
@@ -121,25 +136,17 @@ async function consultar(orden)
     let datos; 
     switch (orden)
     {
-    case 1:
-        datos= await cliente.query(`SELECT * FROM public.visita`);
-        //console.log(datos.rows);  
-        let n22=await consultar(2);       
-        let n23 = n22;        
-        Object.assign(datos.rows,n23);
-        return datos.rows;
+    case 1:       
         break;
-    case 2:
-        datos= await cliente.query('SELECT * FROM public.visita');        
-        return datos.rows;
+    case 2:        
         break;
     case 3:
-        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='2023-07-23 00:00:01' and date_time<='2023-10-24 00:00:01')`);        
+        datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='${kill_hzone(site_control.date_start)}' and date_time<='${kill_hzone(site_control.date_end)}')`);        
         if (datos.rows.length==0)
         {
             console.log("array vacio");
             datos.rows.push({stio:"tetris",pun_max:0,usuario:"Alguien",telefono:50000000,timezone:"2023-07-17T00:00"})
-        }
+        }              
         return datos.rows[0];
         break;
     }
@@ -162,18 +169,30 @@ async function comentar(texto,public,sitio)
 }
 async function sacar_comentarios(sitio)
 {
-    
     const db_comentarios= await cliente.query(`select texto, publico, fecha AT TIME ZONE '+0', sitio from comentarios WHERE sitio='${sitio}'and publico=true`)
     return db_comentarios;
 }
-server.get
-(
-    "*",
-    (solicitud,respuesta)=>
+async function configurar()
+{
+    const tamaño=await cliente.query(`select * from setup`);
+    if (tamaño.rowCount>0)
     {
-        respuesta.send("Error 404!")
+        await cliente.query(`UPDATE setup SET date_start='${site_control.date_start}',date_end='${site_control.date_end}',concurso_on='${site_control.concurso_on}',flayer_dir='${site_control.pro_flayer}'`)
     }
-)
+    else
+    {
+        await cliente.query(`INSERT INTO setup (date_start,date_end,concurso_on,flayer_dir) values ('${site_control.date_start}','${site_control.date_end}','${site_control.concurso_on}','${site_control.pro_flayer}')`)
+    }
+}   
+ async function reestablecer()
+ {
+    const resultado = await cliente.query(`select * from setup`);
+    console.log(resultado.rows);
+    site_control.date_start=new Date(resultado.rows[0].date_start);
+    site_control.date_end= new Date(resultado.rows[0].date_end);
+    site_control.concurso_on=resultado.rows[0].concurso_on;
+    site_control.pro_flayer=resultado.rows[0].flayer_dir;
+ }   
 
 server.post
 (
@@ -195,19 +214,45 @@ server.post
         respuesta.send();
     }
 )
-server.post
-(
-    "/",
-    (solicitud,respuesta)=>
+server.get("/login",(solicitud,respuesta)=>
     {
-        console.log(solicitud.ip);
-        respuesta.send();
-        let encabezado=solicitud
-        console.log(solicitud.body);
-        console.log(solicitud.cookies);
-        console.log(solicitud.signedCookies);
+        respuesta.sendFile(__dirname+'/private/login.html');        
     }
 )
+server.get
+(
+    "/get",
+    (solicitud,respuesta)=>
+    {
+        console.log("solicitando flayer:"+site_control.pro_flayer);                  
+        respuesta.send({setup:site_control});
+        respuesta.end();      
+    }
+)
+server.post
+(
+    "/panel/inside",(solicitud,respuesta)=>
+    {
+        console.log(solicitud.body);
+        if(solicitud.body.usuario=="Jefe" && solicitud.body.clave=="Js")
+        {
+            respuesta.sendFile(__dirname+"/private/panel.html");
+        }   
+        else
+        {
+            respuesta.send("Dato incorrecto!");
+        }
+    }
+)
+server.get
+(
+    "*",
+    (solicitud,respuesta)=>
+    {
+        respuesta.send("Error 404!")
+    }
+)
+
 
 server.listen
 (
@@ -215,7 +260,15 @@ server.listen
     ()=>
     {
         console.log("server a la escucha en el puerto "+puerto);
-        realtime(new Date());
+        realtime(new Date());        
+        kill_hzone(new Date())
+        try 
+            {reestablecer();}
+           
+        catch(e)    
+        {
+            console.log("No hay datos de configuración en base de datos.Error:"+e)
+        }
     }   
 )
 const timer1=setInterval(doing,1000);
@@ -317,4 +370,14 @@ function realtime(mitiempo)
     let minutos=mitiempo.getUTCMinutes();
     const meridiano= horas<12?'am':'pm';    
     console.log(dia+" de "+mes+" del "+año+", "+horas+":"+minutos.toString().padStart(2,'0')+"."+meridiano);
+}
+function kill_hzone(fecha)
+{
+    console.log(fecha);
+    let trans=fecha.toISOString()
+    let piece1=trans.split(".");
+    console.log(piece1);
+    let piece2=piece1[0].split("T")
+    console.log(piece2);
+    return(piece2.join(" "));
 }

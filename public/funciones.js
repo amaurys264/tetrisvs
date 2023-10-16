@@ -1,4 +1,4 @@
-
+var concurso_fecha=document.getElementById("concurso_fecha")
 function conneccion_1()
 {
    //Registrar tu record
@@ -21,7 +21,7 @@ function conneccion_1()
 function conneccion_2()
 {
    //Obtener el record maximo para tetris
-   console.log("enviando solicitud 2");
+  
    let solicitud2=new XMLHttpRequest(); 
    solicitud2.onreadystatechange=function()
    {
@@ -31,11 +31,10 @@ function conneccion_2()
          if (this.status===200)
          {
             let resultado=JSON.parse(this.response);
-            console.log(resultado);
-            score_data.innerHTML=resultado.resultado.pun_max;         
+           
+            score_data.innerHTML=`<i>${resultado.resultado.pun_max}</i>`;         
             score_data.title="Supera este marcador para establecer un nuevo record!"
-            score_user.innerHTML=resultado.resultado.usuario;
-            //score_date.innerHTML=resultado.resultado.timezone;
+            score_user.innerHTML=`<i>${resultado.resultado.usuario}</i>`;            
             score_user.title=null;
             id_user=resultado.id_user;
             max_user_con.innerHTML=resultado.max_con;
@@ -44,11 +43,11 @@ function conneccion_2()
          }
          else 
          {  
-            score_data.innerHTML="N/D"
+            score_data.innerHTML=`<i>N/D</i>`
             score_data.title="No hay connección con el servidor.La puntuación no será registrada."
-            score_user.innerHTML="N/D"
+            score_user.innerHTML=`<i>N/D</i>`
             score_user.title="No hay connección con el servidor.La puntuación no será registrada."
-            score_date.innerHTML="N/D"
+            score_date.innerHTML=`<i>N/D</i>`
             score_date.title="No hay connección con el servidor.La puntuación no será registrada."
          }
       }
@@ -77,4 +76,98 @@ function coneccion3()
         }
     );
 }
+window.onload=function()
+{
+     fetch('/get',{method:"GET"})
+     .then((resp)=>{      
+      return resp.json();
+   })
+     
+     .then(data=>{
+      
+      flayer.src=document.location.origin+data.setup.pro_flayer;
+      concurso_fecha.innerHTML="Válido desde el "+ realtime(new Date(data.setup.date_start),3)+" hasta el "+ realtime(new Date(data.setup.date_end),3)
+      if(data.setup.concurso_on==="Si")
+      {
+        concurso_fecha.style.display="block";
+        
+      }
+      else
+      {
+        concurso_fecha.style.display="none";
+       
+      }
+      
+   }) 
+     .catch((error)=>
+         {
+            console.error('Error:',error)
+         }
+      )
+}
 
+//---------------------------------------------------------------------------------------------------------
+function realtime(mitiempo,valor)
+{   
+    
+    let dia=mitiempo.getUTCDate();
+    let mes;
+    switch (mitiempo.getUTCMonth())
+    {
+        case 0:
+            mes="Enero";
+            break;
+        case 1:
+            mes="Febrero";
+            break;    
+        case 2:
+            mes="Marzo";
+            break;    
+        case 3:
+            mes="Abril";
+            break; 
+        case 4:
+            mes="Mayo";
+            break;            
+        case 5:
+            mes="Junio";
+            break;            
+        case 6:
+            mes="Julio";
+            break;            
+        case 7:
+            mes="Agosto";
+            break;            
+        case 8:
+            mes="Septimebre";
+            break;            
+        case 9:
+            mes="Octubre";
+            break;            
+        case 10:
+             mes="Noviembre";
+             break;            
+        case 11:
+             mes="Diciembre";
+             break;   
+    }
+    let año=mitiempo.getUTCFullYear();
+    let horas=mitiempo.getUTCHours();
+    let minutos=mitiempo.getUTCMinutes();
+    const meridiano= horas<12?'am':'pm';    
+    //console.log(dia+" de "+mes+" del "+año+", "+horas+":"+minutos.toString().padStart(2,'0')+"."+meridiano);
+    switch(valor)
+        {
+            case 1:
+                return dia+" de "+mes+" del "+año+", "+horas+":"+minutos.toString().padStart(2,'0')+"."+meridiano;
+                break;
+            case 2:
+                return dia+" de "+mes+" del "+año;
+                break;
+            case 3:
+                return dia+" de "+mes;
+                break;    
+
+        }
+    
+}

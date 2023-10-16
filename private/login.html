@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+    <style>
+        *
+        {
+            user-select: none;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: auto;
+        }
+        html,body
+        {
+            width: 100%;
+            height: 100%;
+        }        
+        h1{text-align: center;}
+        #acceso{min-width: 300px;max-width: 400px;}
+        label{display:inline-block;padding: 5px 20px; width: 100px;text-align: right;margin-top:10px ;}
+        input{padding: 5px;}
+        button{padding: 5px;width: 50px;margin: auto;}
+    </style>
+</head>
+<body>
+    <h1>Panel de control</h1>
+    <div id="acceso">
+        <form action="/panel/inside" method="post">
+            <fieldset>
+                <legend>Datos de acceso</legend>
+                <label>Usuario</label>
+                <input id="usuario" name="usuario" type="text" required>
+                <br/>
+                <label>Contraseña</label>
+                <input id="clave" name="clave" type="password" required> 
+                <br/>
+                <br/>
+                <button id="entrar" type="submit" accesskey=13>Entrar</button>
+            </fieldset>
+        </form>
+    </div>    
+</body>
+</html>

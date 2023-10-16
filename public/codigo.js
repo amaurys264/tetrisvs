@@ -1,3 +1,4 @@
+
 var micanvas=document.getElementById('caja');
 var lienzo=micanvas.getContext('2d');
 var micanvas2=document.getElementById('canvitas');   
@@ -14,7 +15,7 @@ var sonido2=document.getElementById("efecto2");
 var sonido3=document.getElementById("efecto3");
 var sonido4=document.getElementById("efecto4");
 var musica=document.getElementById("musica");
-
+var flayer=document.getElementById("flayer");
 var plano2=document.getElementById("segundo_plano");
 var boton_over=document.getElementById("boton_over");
 var boton_start=document.getElementById("boton_start");

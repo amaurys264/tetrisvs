@@ -385,6 +385,7 @@ div input:focus
 }
 #concurso_fecha
 {
+    display: block;
     font-size: 18px;
     font-style:italic;       
     font-weight: 900;
