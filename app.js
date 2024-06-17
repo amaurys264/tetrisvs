@@ -12,14 +12,15 @@ var site_control=
         date_end:new Date()
     }
 const multer  = require('multer');
-const storage = multer.diskStorage({
+const storage= multer.memoryStorage()
+/*const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null,__dirname+ '/public/img/flayers/')
     },
     filename: function (req, file, cb) {      
       cb(null, file.originalname)
     }
-  })
+  })*/
 const newupload = multer({ storage: storage })
 
 
@@ -32,7 +33,7 @@ server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
 const cliente = new postgres.Pool({
     connectionString:'postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv',
   })*/
-const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
+/*const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
 const cliente=new postgres.Client(conString);
 cliente.connect(function(err)
   {
@@ -47,8 +48,8 @@ cliente.connect(function(err)
         )
 
   }
-)
-/*const cliente = new postgres.Pool(
+)*/
+const cliente = new postgres.Pool(
     {
         host:'localhost',
         port:5432,
@@ -56,25 +57,32 @@ cliente.connect(function(err)
         user:'postgres',
         password:'Admin'                       
     }  
-)*/
+)
 
 
 server.use(express.static(__dirname+"/public"));
-server.post('/set', newupload.single("image"), (solicitud, respuesta, next)=>
+server.post('/set', newupload.single("image"),async (solicitud, respuesta, next)=>
   {
-    console.log(solicitud.body); 
-    if(solicitud.file!=undefined)
-    {
-        
-        site_control.pro_flayer="/img/flayers/"+solicitud.file.originalname
-    }
+    console.log("Sección post/set")
+    console.log(solicitud.body)
+    console.log(solicitud.file)
+
     const d1=new Date(solicitud.body.date_start);
     const d2=new Date(solicitud.body.date_end);    
     if(solicitud.body.date_start!==""){site_control.date_start=d1}
     if(solicitud.body.date_end){site_control.date_end=d2}
-    if(solicitud.body.concurso_on){site_control.concurso_on=solicitud.body.concurso_on;}
-    configurar()
-    
+    if(solicitud.body.concurso_on==='Si')
+        {site_control.concurso_on=true;console.log('trueeeee')}
+    else
+        {site_control.concurso_on=false;console.log('Falseeee')}
+
+    if(solicitud.file!=undefined)
+    {               
+        site_control.pro_flayer=solicitud.file ;   
+       
+    }   
+    await configurar(); 
+    await reestablecer();        
     respuesta.sendFile(__dirname+"/private/panel.html");    
   }
   )
@@ -103,7 +111,8 @@ server.post("/data",
             add(usuario_id);
         }      
         
-        console.log(site_control.date_start.toISOString());
+       
+        console.log("Usuario"+">"+solicitud.body.id_user); 
         const rem_ip=solicitud.ip;
         const datos=consultar(3);   
         resultado=await datos;        
@@ -116,8 +125,7 @@ async (solicitud,respuesta)=>
         
     switch (solicitud.body.orden)
     {
-      case 1:
-         console.log(solicitud.body); 
+      case 1:         
          comentar(solicitud.body.texto,solicitud.body.es_publico,solicitud.body.sitio);       
          const mis_com1=await sacar_comentarios(solicitud.body.sitio);          
          respuesta.send(mis_com1.rows);
@@ -163,8 +171,7 @@ async function ins_score(isdato1 ,isdato2,isdato3,isdato4,isdato5)
 }
 async function comentar(texto,public,sitio)
 {
-    const date_op=giveTime();  
-    console.log(public);
+    const date_op=giveTime();     
    await cliente.query(`insert into comentarios (texto,publico,fecha,sitio) values ('${texto}','${public}','${date_op}','${sitio}')`);        
 }
 async function sacar_comentarios(sitio)
@@ -177,11 +184,20 @@ async function configurar()
     const tamaño=await cliente.query(`select * from setup`);
     if (tamaño.rowCount>0)
     {
-        await cliente.query(`UPDATE setup SET date_start='${site_control.date_start}',date_end='${site_control.date_end}',concurso_on='${site_control.concurso_on}',flayer_dir='${site_control.pro_flayer}'`)
+             
+        let query = {
+            text: 'UPDATE setup SET date_start=$1,date_end=$2,concurso_on=$3,image=$4',
+            values: [site_control.date_start,site_control.date_end,site_control.concurso_on,JSON.stringify(site_control.pro_flayer)]            
+          };
+          const res = await cliente.query(query);  
     }
     else
-    {
-        await cliente.query(`INSERT INTO setup (date_start,date_end,concurso_on,flayer_dir) values ('${site_control.date_start}','${site_control.date_end}','${site_control.concurso_on}','${site_control.pro_flayer}')`)
+    {        
+        let query = {
+            text: 'INSERT INTO setup (date_start,date_end,concurso_on,image) VALUES ($1,$2,$3,$4)',
+            values: [site_control.date_start,site_control.date_end,site_control.concurso_on,JSON.stringify(site_control.pro_flayer)]            
+          };
+        const res = await cliente.query(query);  
     }
 }   
  async function reestablecer()
@@ -189,11 +205,11 @@ async function configurar()
     const resultado = await cliente.query(`select * from setup`);
     if (resultado.rowCount>0)
     {
-    console.log(resultado.rows);
+    
     site_control.date_start=new Date(resultado.rows[0].date_start);
     site_control.date_end= new Date(resultado.rows[0].date_end);
     site_control.concurso_on=resultado.rows[0].concurso_on;
-    site_control.pro_flayer=resultado.rows[0].flayer_dir;
+    site_control.pro_flayer=resultado.rows[0].image;
     }
     else
     {
@@ -213,26 +229,32 @@ server.post
        switch (solicitud.body.op)
            {
                 case 1:
-                    ins_score(sitio,solicitud.body.record,giveTime(),solicitud.body.usuario,solicitud.body.telefono)
-                    //ins_score(sitio,solicitud.body.record,date_input,solicitud.body.usuario)
+                    if (id_exist(solicitud.body.id_user))
+                    {
+                        ins_score(sitio,solicitud.body.record,giveTime(),solicitud.body.usuario,solicitud.body.telefono)
+                        //ins_score(sitio,solicitud.body.record,date_input,solicitud.body.usuario)
+                    }
                 break;
             }
 
-        console.log("registrando");                
+                     
         respuesta.send();
     }
 )
 server.get("/login",(solicitud,respuesta)=>
     {
-        respuesta.sendFile(__dirname+'/private/login.html');        
+        console.log("Doing GET")
+        respuesta.sendFile(__dirname+'/private/login.html');                
     }
 )
 server.get
 (
     "/get",
-    (solicitud,respuesta)=>
+    async(solicitud,respuesta)=>
     {
-        console.log("solicitando flayer:"+site_control.pro_flayer);                  
+        await reestablecer()
+        console.log("Seccion get /get")
+        console.log(site_control)                
         respuesta.send({setup:site_control});
         respuesta.end();      
     }
@@ -241,7 +263,7 @@ server.post
 (
     "/panel/inside",(solicitud,respuesta)=>
     {
-        console.log(solicitud.body);
+        
         if(solicitud.body.usuario=="Jefe" && solicitud.body.clave=="Js")
         {
             respuesta.sendFile(__dirname+"/private/panel.html");

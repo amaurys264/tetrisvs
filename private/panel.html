@@ -111,14 +111,33 @@
      .then(data=>
      {
         console.log(data);
-        pro_image.src=document.location.origin+data.setup.pro_flayer;
-        
+        //let temp=JSON.parse(data.setup.pro_flayer)
+        let temp=data.setup.pro_flayer
+        console.log(temp);
+        //pro_image.src=document.location.origin+data.setup.pro_flayer;
+        pro_image.src=`data:${(temp.buffer.mimetype)};base64,${a_base64(temp.buffer.data)}`       
      }) 
      .catch((error)=>
          {
             console.error('Error:',error)
          }
       )
+}
+function a_base64(arrayM)
+{
+    let numero=4;
+    numero.valueOf
+    let buffer = new Uint8Array(arrayM)
+    let base64="";
+    buffer.forEach(elemento=>
+        {
+            base64= base64+(String.fromCharCode(elemento));
+        }
+    )
+    console.log(base64);
+    let t=btoa(base64);
+    console.log("Nuevo: "+t)   
+    return t;
 }
     </script>
 </body>

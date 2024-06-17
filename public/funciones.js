@@ -15,7 +15,7 @@ function conneccion_1()
    }  
    solicitud1.open("POST",document.location.origin+"/registrar",true)
    solicitud1.setRequestHeader("Content-Type", "application/json");
-   solicitud1.send(JSON.stringify({op:1,site:"tetris",record:puntuación,usuario:usuario_nombre,telefono:usuario_telef}));   
+   solicitud1.send(JSON.stringify({id_user:id_user,op:1,site:"tetris",record:puntuación,usuario:usuario_nombre,telefono:usuario_telef}));   
    // En los datos enviados op significa la "operacion" a realizar en el servidor.En este caso 1 = registrar en base de datos
 }
 function conneccion_2()
@@ -84,10 +84,15 @@ window.onload=function()
    })
      
      .then(data=>{
-      
-      flayer.src=document.location.origin+data.setup.pro_flayer;
+        console.log(data);
+       //let temp=JSON.parse(data.setup.pro_flayer)
+
+
+      //flayer.src=document.location.origin+data.setup.pro_flayer;
+      //flayer.src=`data:${element.galeria[0].buffer.mimetype};base64,${a_base64(element.galeria[0].buffer.buffer.data)}`
+      flayer.src=`data:${(data.setup.pro_flayer.buffer.mimetype)};base64,${a_base64(data.setup.pro_flayer.buffer.data)}` 
       concurso_fecha.innerHTML="Válido desde el "+ realtime(new Date(data.setup.date_start),3)+" hasta el "+ realtime(new Date(data.setup.date_end),3)
-      if(data.setup.concurso_on==="Si")
+      if(data.setup.concurso_on===true)
       {
         concurso_fecha.style.display="block";
         
@@ -170,4 +175,20 @@ function realtime(mitiempo,valor)
 
         }
     
+}
+function a_base64(arrayM)
+{
+    let numero=4;
+    numero.valueOf
+    let buffer = new Uint8Array(arrayM)
+    let base64="";
+    buffer.forEach(elemento=>
+        {
+            base64= base64+(String.fromCharCode(elemento));
+        }
+    )
+    console.log(base64);
+    let t=btoa(base64);
+    console.log("Nuevo: "+t)   
+    return t;
 }
