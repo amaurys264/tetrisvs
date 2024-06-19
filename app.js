@@ -28,7 +28,7 @@ var cors = require('cors');
 server.use(body_parser.urlencoded({extended:true}))
 server.use(body_parser.json())
 
-server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
+//server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
 /*const connectionString ="postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
 const cliente = new postgres.Pool({
     connectionString:'postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv',
