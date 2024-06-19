@@ -72,7 +72,7 @@
         var image_inp=document.getElementById("image_inp");
         var pro_image=document.getElementById("pro_image");
         var button_clear=document.getElementById("button_clear");
-
+        
 
         function modificar()
         {
@@ -122,6 +122,32 @@
             console.error('Error:',error)
          }
       )
+}
+button_clear.onclick=function()
+{
+    const opciones={
+            method: "POST"
+           } 
+           fetch(document.location.origin+"/clear_score",opciones)
+           .then(response => 
+                {   
+                    return response.json();
+                }        
+            ).then
+            (
+               data=>
+               { 
+                    
+                    alert("Tabla de puntuaciones borrada");                
+               }
+            )    
+            .catch 
+            (
+                (error)=>
+                {
+                    console.log('Error:',error)
+                }
+            );      
 }
 function a_base64(arrayM)
 {

@@ -274,6 +274,18 @@ server.post
         }
     }
 )
+server.post
+(
+    "/clear_score",
+    async(solicitud,respuesta)=>
+        {
+            console.log("delete")
+            const resultado = await cliente.query(`delete from records`);  
+            respuesta.status(200).end()
+        }
+       
+
+)
 server.get
 (
     "*",
