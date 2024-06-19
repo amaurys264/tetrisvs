@@ -33,7 +33,7 @@ server.use(cors({optionsSuccessStatus: 200,credentials:true,origin:true}));
 const cliente = new postgres.Pool({
     connectionString:'postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv',
   })*/
-/*const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
+const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
 const cliente=new postgres.Client(conString);
 cliente.connect(function(err)
   {
@@ -48,7 +48,8 @@ cliente.connect(function(err)
         )
 
   }
-)*/
+)
+/*
 const cliente = new postgres.Pool(
     {
         host:'localhost',
@@ -58,7 +59,7 @@ const cliente = new postgres.Pool(
         password:'Admin'                       
     }  
 )
-
+*/
 
 server.use(express.static(__dirname+"/public"));
 server.post('/set', newupload.single("image"),async (solicitud, respuesta, next)=>
