@@ -1,4 +1,5 @@
 var concurso_fecha=document.getElementById("concurso_fecha")
+var partidas=document.getElementById("partidas")
 function conneccion_1()
 {
    //Registrar tu record
@@ -76,22 +77,19 @@ function coneccion3()
         }
     );
 }
+
 window.onload=function()
 {
+    console.log("hola")
      fetch('/get',{method:"GET"})
      .then((resp)=>{      
       return resp.json();
-   })
-     
+   })   
      .then(data=>{
-        console.log(data);
-       //let temp=JSON.parse(data.setup.pro_flayer)
-
-
-      //flayer.src=document.location.origin+data.setup.pro_flayer;
-      //flayer.src=`data:${element.galeria[0].buffer.mimetype};base64,${a_base64(element.galeria[0].buffer.buffer.data)}`
+      console.log(data);      
       flayer.src=`data:${(data.setup.pro_flayer.buffer.mimetype)};base64,${a_base64(data.setup.pro_flayer.buffer.data)}` 
       concurso_fecha.innerHTML="Válido desde el "+ realtime(new Date(data.setup.date_start),3)+" hasta el "+ realtime(new Date(data.setup.date_end),3)
+      partidas.innerHTML=data.setup.cantidad.count
       if(data.setup.concurso_on==="true")
       {
         concurso_fecha.style.display="block";
@@ -102,7 +100,7 @@ window.onload=function()
         concurso_fecha.style.display="none";
        
       }
-      
+      console.log(data)
    }) 
      .catch((error)=>
          {

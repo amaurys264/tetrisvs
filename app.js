@@ -9,7 +9,8 @@ var site_control=
         concurso_on:"",
         pro_flayer:"/img/flayer.jpg",
         date_start:new Date(),
-        date_end:new Date()
+        date_end:new Date(),
+        cantidad:0
     }
 const multer  = require('multer');
 const storage= multer.memoryStorage()
@@ -33,7 +34,7 @@ server.use(body_parser.json())
 const cliente = new postgres.Pool({
     connectionString:'postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv',
   })*/
-const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
+/*const conString = "postgres://eetxhnwv:ybCfRTTwlwxY9iP8ujCQHnAiOTs4HCxn@motty.db.elephantsql.com/eetxhnwv"
 const cliente=new postgres.Client(conString);
 cliente.connect(function(err)
   {
@@ -48,8 +49,8 @@ cliente.connect(function(err)
         )
 
   }
-)
-/*
+)*/
+
 const cliente = new postgres.Pool(
     {
         host:'localhost',
@@ -59,7 +60,7 @@ const cliente = new postgres.Pool(
         password:'Admin'                       
     }  
 )
-*/
+
 
 server.use(express.static(__dirname+"/public"));
 server.post('/set', newupload.single("image"),async (solicitud, respuesta, next)=>
@@ -147,7 +148,9 @@ async function consultar(orden)
     {
     case 1:       
         break;
-    case 2:        
+    case 2:
+        datos=await cliente.query(`SELECT count(*) FROM records`);         
+        return datos.rows[0];
         break;
     case 3:
         datos=await cliente.query(`SELECT sitio,pun_max,usuario,telefono,date_time AT TIME ZONE '+0' FROM records where (pun_max=(select max(pun_max) from records) and date_time>='${kill_hzone(site_control.date_start)}' and date_time<='${kill_hzone(site_control.date_end)}')`);        
@@ -253,6 +256,7 @@ server.get
     "/get",
     async(solicitud,respuesta)=>
     {
+        site_control.cantidad =await consultar(2)
         await reestablecer()
         console.log("Seccion get /get")
         console.log(site_control)                
@@ -260,6 +264,7 @@ server.get
         respuesta.end();      
     }
 )
+
 server.post
 (
     "/panel/inside",(solicitud,respuesta)=>
