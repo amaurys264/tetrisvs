@@ -134,7 +134,7 @@ window.addEventListener("keydown", (evento) => {
    console.log(input_nombre.value);
    console.log(input_telefono.value);   
 
-      if(input_nombre.value=="" || input_telefono.value=="" || input_telefono.value<50000000 || input_telefono.value>59999999 )
+      if(input_nombre.value=="" || input_telefono.value=="" || input_telefono.value<50000000 || input_telefono.value>69999999 )
       {         
          alert("Tu informacion está incompleta,o no es válida");
          return;
