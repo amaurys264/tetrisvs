@@ -365,7 +365,9 @@ footer div
 #flayer
 {
     width:100%;
-    min-width:150px ;   
+    min-width:150px ; 
+    min-height: 200px;  
+   
     
 }
 div input
@@ -410,6 +412,39 @@ ul
 {
     padding: 50px;
 }
+#reglamento_body >table
+{
+    margin: auto;
+    
+}
+#reglamento_body >table *
+{
+    text-align: center;
+}
+#reglamento_body >table thead
+{
+    margin-top: 100px;
+    background-color: rgb(172, 198, 247);
+}
+#reglamento_body >table tbody tr
+{
+    border: solid 2px black;
+   
+}
+
+#reglamento_body >table tbody td
+{
+    width: 100px;
+    text-align: center;
+    color: rgb(46, 46, 46);
+    overflow-x:hidden;
+
+}
+#reglamento_body p
+{
+    text-align: center;
+}
+
 }
 /*---------------------------------------------------------------------------------------------------*/
 @media screen and
@@ -775,6 +810,7 @@ footer div
 {
     max-width:300px;
     min-width:150px ;
+    min-height: 200px;
     
 }
 div input
@@ -818,6 +854,36 @@ ul
 {
     padding: 50px;
 }
+#reglamento_body >table
+{
+    margin: auto;
+    
+}
+#reglamento_body >table *
+{
+    text-align: center;
+}
+#reglamento_body >table thead
+{
+    margin-top: 100px;
+    background-color: rgb(172, 198, 247);
+}
+#reglamento_body >table tbody tr
+{
+    border: solid 2px black;
+   
+}
 
+#reglamento_body >table tbody td
+{
+    width: 100px;
+    text-align: center;
+    color: rgb(46, 46, 46);
+    overflow-x:hidden;
 
+}
+#reglamento_body  p
+{
+    text-align: center;    
+}
 }

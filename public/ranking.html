@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Ranking</title> 
+    <link rel="stylesheet" href="estilo.css">   
+</head>
+<body>
+    <div id="reglamento_body">
+        <Header>
+            <h1>Ranking</h1>            
+        </Header>  
+        <br>  
+        <table>
+            <thead>
+                <tr>
+                    <td><strong>No.</strong></td>
+                    <td><strong>Nombre</strong></td>
+                    <td><strong>Puntuación</strong></td>                    
+                </tr>
+            </thead>
+            <tbody>
+                <td></td>
+                <td><i>Cargando...</i></td>
+                <td></td>
+                
+
+            </tbody>
+
+
+        </table>
+        <br>
+        <br>
+        <br>
+         <a href="index.html" style="color:rgb(18, 43, 59);text-align:center;display: block;"><strong>Página Principal</strong></a >
+         <br/><br/>   
+    </div>  
+<script>
+    var tabla=document.querySelector('#reglamento_body >table tbody')
+
+window.onload=function()
+{
+    fetch(document.location.origin+'/ranking',
+   {
+    method:'get',
+    headers:{
+        'Content-Type':'application/json'
+    }
+   }) 
+   .then(response=>response.json())
+   .then(datos=>
+      {
+        console.log(datos.resultado.rows) 
+         tabla.innerHTML=''; 
+         datos.resultado.rows.forEach((element,index) =>{
+
+            tabla.innerHTML+=`<tr>
+                    <td><i>${index+1}</i></td>
+                    <td><i>${element.usuario}</i></td>
+                    <td><i>${element.pun_max}</i></td>
+                </tr>`
+            
+         });        
+      })
+   .catch(error=>{console.log(error);});
+}
+
+</script>    
+</body>
+</html>

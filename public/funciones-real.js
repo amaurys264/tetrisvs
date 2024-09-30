@@ -142,7 +142,7 @@ function realtime(mitiempo,valor)
             mes="Agosto";
             break;            
         case 8:
-            mes="Septimebre";
+            mes="Septiembre";
             break;            
         case 9:
             mes="Octubre";

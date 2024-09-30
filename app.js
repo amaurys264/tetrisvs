@@ -264,7 +264,16 @@ server.get
         respuesta.end();      
     }
 )
-
+server.get
+(
+    "/ranking",
+    async(solicitud,respuesta)=>
+    {
+        const resultado = await cliente.query(`SELECT * FROM "public"."records" where sitio='tetris' and date_time>='${kill_hzone(site_control.date_start)}' and date_time<='${kill_hzone(site_control.date_end)}' order by pun_max desc,date_time asc limit 10 `);  
+        console.log(resultado);
+        respuesta.status(200).send({resultado})  
+    }
+)
 server.post
 (
     "/panel/inside",(solicitud,respuesta)=>
